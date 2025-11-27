@@ -1,0 +1,15 @@
+managed implementation in class zbp_webinar_bgpfdata unique;
+strict ( 2 );
+
+define behavior for ZR_Webinar_bgPFData //alias <alias_name>
+persistent table zwb_bgpf_data
+lock master
+authorization master ( instance )
+with additional save
+//etag master <field_name>
+{
+//  create;
+//  update;
+//  delete;
+static action generate;
+}
