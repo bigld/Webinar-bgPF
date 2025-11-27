@@ -8,7 +8,7 @@ authorization master ( instance )
 with additional save
 //etag master <field_name>
 {
-//  create;
+  create;
 //  update;
 //  delete;
 static action generate;

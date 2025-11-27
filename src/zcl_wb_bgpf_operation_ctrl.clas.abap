@@ -18,19 +18,39 @@ ENDCLASS.
 
 
 CLASS zcl_wb_bgpf_operation_ctrl IMPLEMENTATION.
+
   METHOD constructor.
     data = i_data.
   ENDMETHOD.
 
   METHOD if_bgmc_op_single~execute.
-*  messAGE 'd' type 'X'.
-    modify( ).
-    save( ).
+    TRY.
+
+        MODIFY ENTITIES OF ZR_Webinar_bgPFData ENTITY ZR_Webinar_bgPFData
+               CREATE FROM VALUE #( ( %cid               = 'MyCID_1'
+                                      uuid               = cl_uuid_factory=>create_system_uuid( )->create_uuid_x16( )
+                                      %control-uuid      = if_abap_behv=>mk-on
+                                      TimeStamp          = utclong_current( )
+                                      %control-TimeStamp = if_abap_behv=>mk-on
+                                      Data               = 'RAP Create'
+                                      %control-Data      = if_abap_behv=>mk-on ) )
+               FAILED  FINAL(failed)
+               REPORTED FINAL(reported).
+
+        modify( ).
+
+        cl_abap_tx=>save( ).
+        save( ).
+
+      CATCH cx_root.
+        " just to suppress warnings
+    ENDTRY.
+
   ENDMETHOD.
 
   METHOD modify.
     IF data IS INITIAL.
-      RAISE EXCEPTION NEW cx_demo_bgpf( textid = cx_demo_bgpf=>initial_input ).
+      RAISE EXCEPTION NEW cx_bgmc_operation( textid = cx_bgmc_operation=>t100_operation_failed ).
     ENDIF.
   ENDMETHOD.
 
