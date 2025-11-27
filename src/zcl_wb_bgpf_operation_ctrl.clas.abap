@@ -18,7 +18,6 @@ ENDCLASS.
 
 
 CLASS zcl_wb_bgpf_operation_ctrl IMPLEMENTATION.
-
   METHOD constructor.
     data = i_data.
   ENDMETHOD.
@@ -32,10 +31,12 @@ CLASS zcl_wb_bgpf_operation_ctrl IMPLEMENTATION.
                                       %control-uuid      = if_abap_behv=>mk-on
                                       TimeStamp          = utclong_current( )
                                       %control-TimeStamp = if_abap_behv=>mk-on
-                                      Data               = 'RAP Create'
+                                      Data               = 'RAP Create:' && data
                                       %control-Data      = if_abap_behv=>mk-on ) )
-               FAILED  FINAL(failed)
+               FAILED FINAL(failed)
                REPORTED FINAL(reported).
+
+        " COMMIT WORK. DUMP!
 
         modify( ).
 
@@ -45,18 +46,27 @@ CLASS zcl_wb_bgpf_operation_ctrl IMPLEMENTATION.
       CATCH cx_root.
         " just to suppress warnings
     ENDTRY.
-
   ENDMETHOD.
 
   METHOD modify.
+
+    " fill buffer
     IF data IS INITIAL.
       RAISE EXCEPTION NEW cx_bgmc_operation( textid = cx_bgmc_operation=>t100_operation_failed ).
     ENDIF.
+
   ENDMETHOD.
 
   METHOD save.
-    MODIFY zwb_bgpf_data FROM @( VALUE #( uuid  = cl_uuid_factory=>create_system_uuid( )->create_uuid_x16( )
-                                          data  = data
-                                          stamp = utclong_current( ) ) ).
+    TRY.
+
+      " save buffer
+        MODIFY zwb_bgpf_data FROM @( VALUE #( uuid  = cl_uuid_factory=>create_system_uuid( )->create_uuid_x16( )
+                                              data  = data
+                                              stamp = utclong_current( ) ) ).
+
+      CATCH cx_root.
+        " just to suppress warnings
+    ENDTRY.
   ENDMETHOD.
 ENDCLASS.

@@ -1,16 +1,15 @@
 CLASS lsc_zr_webinar_bgpfdata DEFINITION INHERITING FROM cl_abap_behavior_saver.
 
   PROTECTED SECTION.
-
     METHODS save_modified REDEFINITION.
 
 ENDCLASS.
 
 
-
 CLASS lhc_zr_Webinar_bgPFData DEFINITION INHERITING FROM cl_abap_behavior_handler.
   PUBLIC SECTION.
-    CLASS-DATA: bgpf_process TYPE REF TO if_bgmc_process_single_op.
+    CLASS-DATA bgpf_process TYPE REF TO if_bgmc_process_single_op.
+
   PRIVATE SECTION.
     METHODS get_instance_authorizations FOR INSTANCE AUTHORIZATION
       IMPORTING keys REQUEST requested_authorizations FOR zr_Webinar_bgPFData RESULT result.
@@ -22,7 +21,6 @@ ENDCLASS.
 
 
 CLASS lsc_zr_webinar_bgpfdata IMPLEMENTATION.
-
   METHOD save_modified.
     TRY.
         IF lhc_zr_Webinar_bgPFData=>bgpf_process IS BOUND.
@@ -37,18 +35,17 @@ CLASS lsc_zr_webinar_bgpfdata IMPLEMENTATION.
         " just to suppress warnings
     ENDTRY.
   ENDMETHOD.
-
 ENDCLASS.
 
-CLASS lhc_zr_Webinar_bgPFData IMPLEMENTATION.
 
+CLASS lhc_zr_Webinar_bgPFData IMPLEMENTATION.
   METHOD get_instance_authorizations.
   ENDMETHOD.
 
   METHOD generate.
     TRY.
 
-        DATA(bgpf_operation) = NEW zcl_wb_bgpf_operation_ctrl( CONV #( 'BGPF_A' ) ).
+        FINAL(bgpf_operation) = NEW zcl_wb_bgpf_operation_ctrl( CONV #( 'BGPF_Action' ) ).
 
         bgpf_process = cl_bgmc_process_factory=>get_default( )->create( ).
 
@@ -58,5 +55,4 @@ CLASS lhc_zr_Webinar_bgPFData IMPLEMENTATION.
         " just to suppress warnings
     ENDTRY.
   ENDMETHOD.
-
 ENDCLASS.
