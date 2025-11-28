@@ -9,10 +9,10 @@ ENDCLASS.
 
 CLASS zcl_wb_runner IMPLEMENTATION.
   METHOD if_oo_adt_classrun~main.
-    DATA keys TYPE TABLE FOR ACTION IMPORT ZR_Webinar_bgPFData~generate.
+    DATA keys         TYPE TABLE FOR ACTION IMPORT ZR_Webinar_bgPFData~generate.
+    DATA bgpf_process TYPE REF TO if_bgmc_process_single_op.
 
     TRY.
-
         keys = VALUE #( ( %cid = '1' ) ).
 
         MODIFY ENTITIES OF ZR_Webinar_bgPFData
@@ -23,8 +23,7 @@ CLASS zcl_wb_runner IMPLEMENTATION.
 
         COMMIT ENTITIES.
 
-        DATA: bgpf_process TYPE REF TO if_bgmc_process_single_op.
-        DATA(bgpf_operation) = NEW zcl_wb_bgpf_operation_ctrl( CONV #( 'BGPF_RUN' ) ).
+        FINAL(bgpf_operation) = NEW zcl_wb_bgpf_operation_ctrl( CONV #( 'BGPF_RUN' ) ).
 
         bgpf_process = cl_bgmc_process_factory=>get_default( )->create( ).
         bgpf_process->set_name( 'Webinar' )->set_operation( bgpf_operation ).
@@ -35,8 +34,12 @@ CLASS zcl_wb_runner IMPLEMENTATION.
                                               stamp = utclong_current( ) ) ).
 
       CATCH cx_root.
-        "handle exception
+        " handle exception
     ENDTRY.
     COMMIT WORK.
+
+
+
+    out->write( 'Action executed!' ).
   ENDMETHOD.
 ENDCLASS.
