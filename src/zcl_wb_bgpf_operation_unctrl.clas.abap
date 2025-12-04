@@ -20,14 +20,12 @@ ENDCLASS.
 
 CLASS zcl_wb_bgpf_operation_unctrl IMPLEMENTATION.
   METHOD constructor.
-
-
     data = i_data.
   ENDMETHOD.
 
   METHOD if_bgmc_op_single_tx_uncontr~execute.
-    DATA: timestamp TYPE utclong.
-    DATA: uuid      TYPE sysuuid_x16.
+    DATA timestamp TYPE utclong.
+    DATA uuid      TYPE sysuuid_x16.
 
     cl_abap_tx=>modify( ).
     timestamp = utclong_current( ).
@@ -40,7 +38,7 @@ CLASS zcl_wb_bgpf_operation_unctrl IMPLEMENTATION.
                                   %control-TimeStamp = if_abap_behv=>mk-on
                                   Data               = 'RAP Create'
                                   %control-Data      = if_abap_behv=>mk-on ) )
-           FAILED  FINAL(failed)
+           FAILED FINAL(failed)
            REPORTED FINAL(reported).
     COMMIT WORK.
     modify( ).

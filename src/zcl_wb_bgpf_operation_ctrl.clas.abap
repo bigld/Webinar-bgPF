@@ -36,7 +36,7 @@ CLASS zcl_wb_bgpf_operation_ctrl IMPLEMENTATION.
                FAILED FINAL(failed)
                REPORTED FINAL(reported).
 
-        " COMMIT WORK. DUMP!
+*         COMMIT WORK. "DUMP! BEHAVIOR_ILLEGAL_STMT_IN_CALL
 
         modify( ).
 
